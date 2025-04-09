@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MindGarden+ – Word Jumble</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #F3F3FF;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #2e8b57;
+    }
+
+    #jumble {
+      font-size: 2em;
+      margin: 30px 0;
+      letter-spacing: 5px;
+      color: #333;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 18px;
+      width: 200px;
+      border-radius: 8px;
+      border: 1px solid #aaa;
+      margin-bottom: 15px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background-color: #4caf50;
+      color: white;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    #feedback {
+      font-size: 20px;
+      color: #4b0082;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 20px;">
+    <button onclick="window.location.href='index.html'" 
+            style="padding: 10px 20px; font-size: 16px; border-radius: 8px; border: none; background-color: #bcd4e6; cursor: pointer;">
+      🏠 Back to Dashboard
+    </button>
+  </div>
+
+  <h1>🔤 Word Jumble</h1>
+  <p>Unscramble the letters to guess the word.</p>
+
+  <div id="jumble">_ _ _ _</div>
+  <input type="text" id="guess" placeholder="Type your guess here" />
+  <br>
+  <button onclick="checkGuess()">Check</button>
+  <button onclick="nextPuzzle()">Next Word</button>
+
+  <div id="feedback"></div>
+
+  <script>
+    const words = [
+      "dog", "cat", "rain", "baby", "bird", 
+      "fire", "clock", "bell", "ocean", "car", "tree", "moon", "star", "sun", "book", "pen", "hat", "shoe", "flower", "fruit", "apple", "banana", "grape", "orange", "lemon"
+    ];
+
+    let currentWord = "";
+    let scrambled = "";
+
+    function shuffle(word) {
+      const letters = word.split('');
+      for (let i = letters.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [letters[i], letters[j]] = [letters[j], letters[i]];
+      }
+      return letters.join('');
+    }
+
+    function nextPuzzle() {
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('guess').value = '';
+      currentWord = words[Math.floor(Math.random() * words.length)];
+      scrambled = shuffle(currentWord);
+      // Avoid unscrambled version
+      while (scrambled === currentWord) {
+        scrambled = shuffle(currentWord);
+      }
+      document.getElementById('jumble').textContent = scrambled.toUpperCase();
+    }
+
+    function checkGuess() {
+      const guess = document.getElementById('guess').value.trim().toLowerCase();
+      const feedback = document.getElementById('feedback');
+      if (guess === currentWord) {
+        feedback.textContent = "🎉 Correct! Great job!";
+      } else {
+        feedback.textContent = "❌ Try again!";
+      }
+    }
+
+    // Load the first puzzle on page load
+    window.onload = nextPuzzle;
+  </script>
+
+</body>
+</html>

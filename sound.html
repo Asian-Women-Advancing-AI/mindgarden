@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindGarden+ – Guess the Sound</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #F3F3FF;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 2em;
+      color: #2e6f66;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.1em;
+      color: #555;
+    }
+
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    button {
+      padding: 15px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background-color: #4a90e2;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    button:hover {
+      background-color: #357ab7;
+    }
+
+    input {
+      margin-top: 20px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    #feedback {
+      font-size: 18px;
+      margin-top: 15px;
+      color: #2e6f66;
+    }
+
+    #score {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 20px;">
+    <button onclick="window.location.href='index.html'" 
+            style="padding: 10px 20px; font-size: 16px; border-radius: 8px; border: none; background-color: #bcd4e6; cursor: pointer;">
+      🏠 Back to Dashboard
+    </button>
+  </div>
+
+  <h1>🎧 Guess the Sound</h1>
+  <p>Click a sound button, then type your guess and click Submit!</p>
+
+  <div class="button-container">
+    <button onclick="playSound(1)">🔊 Sound 1</button>
+    <button onclick="playSound(2)">🔊 Sound 2</button>
+    <button onclick="playSound(3)">🔊 Sound 3</button>
+    <button onclick="playSound(4)">🔊 Sound 4</button>
+    <button onclick="playSound(5)">🔊 Sound 5</button>
+    <button onclick="playSound(6)">🔊 Sound 6</button>
+    <button onclick="playSound(7)">🔊 Sound 7</button>
+    <button onclick="playSound(8)">🔊 Sound 8</button>
+    <button onclick="playSound(9)">🔊 Sound 9</button>
+    <button onclick="playSound(10)">🔊 Sound 10</button>
+  </div>
+
+  <input type="text" id="userGuess" placeholder="Type your guess here..." />
+  <br><br>
+  <button onclick="checkGuess()">✅ Submit</button>
+
+  <div id="feedback"></div>
+  <div id="score"></div>
+
+  <!-- Audio Elements -->
+  <audio id="sound1" src="attached_assets/dog-bark.mp3"></audio>
+  <audio id="sound2" src="attached_assets/doorbell.mp3"></audio>
+  <audio id="sound3" src="attached_assets/ocean.mp3"></audio>
+  <audio id="sound4" src="attached_assets/cat-meow.mp3"></audio>
+  <audio id="sound5" src="attached_assets/baby-laugh.mp3"></audio>
+  <audio id="sound6" src="attached_assets/clock-tick.mp3"></audio>
+  <audio id="sound7" src="attached_assets/rain.mp3"></audio>
+  <audio id="sound8" src="attached_assets/fire-crackle.mp3"></audio>
+  <audio id="sound9" src="attached_assets/car-horn.mp3"></audio>
+  <audio id="sound10" src="attached_assets/bird-chirp.mp3"></audio>
+
+  <script>
+    const answerKey = {
+      1: ['dog', 'dog bark', 'bark'],
+      2: ['doorbell', 'bell', 'door bell'],
+      3: ['ocean', 'waves', 'sea', 'water'],
+      4: ['cat', 'meow', 'cat meow'],
+      5: ['baby', 'laugh', 'baby laugh', 'giggle'],
+      6: ['clock', 'tick', 'ticking', 'clock tick'],
+      7: ['rain', 'rainfall', 'raining'],
+      8: ['fire', 'crackling', 'campfire', 'fireplace'],
+      9: ['car', 'car horn', 'horn', 'honk'],
+      10: ['bird', 'chirp', 'birdsong', 'bird chirp']
+    };
+
+    let currentSound = null;
+    let score = 0;
+
+    function playSound(num) {
+      currentSound = num;
+      const audio = document.getElementById(`sound${num}`);
+      audio.currentTime = 0;
+      audio.play();
+    }
+
+    function checkGuess() {
+      const userInput = document.getElementById('userGuess').value.toLowerCase().trim();
+      const feedback = document.getElementById('feedback');
+
+      if (currentSound === null) {
+        feedback.innerText = "Please play a sound first!";
+        return;
+      }
+
+      const correctAnswers = answerKey[currentSound];
+      if (correctAnswers.includes(userInput)) {
+        feedback.innerText = "✅ Correct!";
+        score++;
+      } else {
+        feedback.innerText = `❌ Try again! Hint: It was one of these – ${correctAnswers.join(", ")}`;
+      }
+
+      document.getElementById('score').innerText = `Score: ${score}`;
+      document.getElementById('userGuess').value = '';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindGarden - Familiar Faces Game</title>
+  <style>
+    body 
+    {
+      font-family: 'Nunito', sans-serif;
+      background-color: #F3F3FF;
+      text-align: center;
+      padding: 30px;
+    }
+    h1 {
+      color: #4c6e91;
+    }
+    input, button {
+      font-size: 16px;
+      padding: 8px;
+      margin: 5px;
+    }
+    #preview {
+      margin-top: 20px;
+    }
+    #game-section {
+      margin-top: 40px;
+    }
+    img {
+      max-width: 300px;
+      max-height: 200px;
+      margin-bottom: 20px;
+    }
+    .option-button {
+      padding: 10px 25px;
+      margin: 10px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      background-color: #bcd4e6;
+      cursor: pointer;
+    }
+    .option-button:hover {
+      background-color: #88bdbc;
+    }
+    #feedback {
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 20px;">
+    <button onclick="window.location.href='index.html'" 
+            style="padding: 10px 20px; font-size: 16px; border-radius: 8px; border: none; background-color: #bcd4e6; cursor: pointer;">
+      🏠 Back to Dashboard
+    </button>
+  </div>
+
+  
+<h1>MindGarden 🌼</h1>
+<p>Upload images of familiar people or objects, give them a name, and let the user guess!</p>
+
+<div id="upload-section">
+  <input type="file" id="imageInput" accept="image/*">
+  <input type="text" id="labelInput" placeholder="Enter Name or Label">
+  <button onclick="addEntry()">Add to Game</button>
+</div>
+
+<div id="preview"></div>
+
+<div id="game-section">
+  <button onclick="startGame()">Start Game ▶️</button>
+  <div id="error-message1" style="margin-top: 20px; font-size: 20px; font-weight: bold; color: green;"></div>
+  <div id="error-message2" style="margin-top: 20px; font-size: 20px; font-weight: bold; color: green;"></div>
+  <div id="game-area" style="display:none;">
+    <img id="game-image" src="" alt="Familiar Object">
+    <div id="options"></div>
+    <div id="feedback"></div>
+  </div>
+</div>
+
+<script>
+  const entries = [];
+  let currentEntry = null;
+
+  function addEntry() {
+    const fileInput = document.getElementById("imageInput");
+    const label = document.getElementById("labelInput").value.trim();
+    if (!fileInput.files[0] || !label) {
+      document.getElementById("error-message1").innerText = "Please upload an image and provide a name or label.";
+
+      setTimeout(() => {
+        document.getElementById("error-message1").innerText = "";
+      }, 3000);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      entries.push({ label: label, image: e.target.result });
+      updatePreview();
+      document.getElementById("labelInput").value = '';
+      fileInput.value = '';
+    };
+    reader.readAsDataURL(fileInput.files[0]);
+  }
+
+  function updatePreview() {
+    const preview = document.getElementById("preview");
+    preview.innerHTML = "<h3>Images Added:</h3>";
+    entries.forEach((entry, index) => {
+      preview.innerHTML += `<p>${index + 1}. ${entry.label}</p>`;
+    });
+  }
+
+  function startGame() {
+    if (entries.length < 3) {
+      document.getElementById("error-message2").innerText = "Please upload at least 3 images.";
+
+      setTimeout(() => {
+        document.getElementById("error-message2").innerText = "";
+      }, 3000);
+      return;
+    }
+    document.getElementById("game-area").style.display = "block";
+    document.getElementById("feedback").innerText = '';
+    loadRandomEntry();
+  }
+
+  function loadRandomEntry() {
+    const idx = Math.floor(Math.random() * entries.length);
+    currentEntry = entries[idx];
+    document.getElementById("game-image").src = currentEntry.image;
+
+    // Create 2 random incorrect options
+    const options = [currentEntry.label];
+    while (options.length < 3) {
+      const randomEntry = entries[Math.floor(Math.random() * entries.length)];
+      if (!options.includes(randomEntry.label)) {
+        options.push(randomEntry.label);
+      }
+    }
+
+    // Shuffle options
+    for (let i = options.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [options[i], options[j]] = [options[j], options[i]];
+    }
+
+    // Display options
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = '';
+    options.forEach(option => {
+      const btn = document.createElement("button");
+      btn.className = "option-button";
+      btn.innerText = option;
+      btn.onclick = () => checkAnswer(option);
+      optionsDiv.appendChild(btn);
+    });
+  }
+
+  function checkAnswer(selected) {
+    const feedback = document.getElementById("feedback");
+    if (selected === currentEntry.label) {
+      feedback.innerText = "✅ Correct!";
+      feedback.style.color = "green";
+    } else {
+      feedback.innerText = "❌ Try again!";
+      feedback.style.color = "red";
+    }
+
+    setTimeout(() => {
+      feedback.innerText = "";
+      loadRandomEntry();
+    }, 1500);
+  }
+</script>
+
+</body>
+</html>

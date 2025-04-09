@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindGarden+ – Caregiver Tips</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #ffffff;
+      text-align: center;
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.5s ease-in-out;
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.4);
+      padding: 40px;
+      border-radius: 12px;
+      max-width: 600px;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    .tip {
+      font-size: 1.2em;
+      margin: 15px 0;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 12px 24px;
+      font-size: 1em;
+      background-color: #74b49b;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #5e9d84;
+    }
+  </style>
+</head>
+<body>
+  <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 20px;">
+    <button onclick="window.location.href='index.html'" 
+            style="padding: 10px 20px; font-size: 16px; border-radius: 8px; border: none; background-color: #bcd4e6; cursor: pointer;">
+      🏠 Back to Dashboard
+    </button>
+  </div>
+
+  <div class="overlay">
+    <h1>🌿 Caregiver Daily Tips</h1>
+    <div id="tip1" class="tip"></div>
+    <div id="tip2" class="tip"></div>
+    <button onclick="refreshTips()">🔁 Refresh Tips</button>
+  </div>
+
+  <script>
+    const tips = [
+      "Take a few deep breaths before starting your day. Your calm energy matters.",
+      "It’s okay to ask for help — caregiving is a team effort.",
+      "Try a five-minute break outside. Fresh air can reset your mood.",
+      "Celebrate small wins. They build strength over time.",
+      "Use music to lift spirits — yours and your loved one’s.",
+      "Don’t strive for perfection, strive for presence.",
+      "A routine creates comfort. Stick with simple, steady rhythms.",
+      "Talk to a friend today. You deserve connection too.",
+      "Create a small joy ritual — tea, candle, or favorite book.",
+      "Let yourself feel whatever comes up. It’s human.",
+      "Your patience is a gift — even when it feels unseen.",
+      "Practice self-kindness like you would for your loved one.",
+      "Keep a short journal. Reflecting even once a week can ease the heart.",
+      "Celebrate your strength — you're doing more than you realize.",
+      "Hydrate and rest. Your health fuels your caregiving.",
+      "It’s okay to say 'I need a break.' Boundaries protect your love.",
+      "You’re making a difference — even if progress feels slow.",
+      "Connect to nature, even through a window — it soothes the soul.",
+      "Place something beautiful where you can see it daily.",
+      "Remember: love is felt in the little things."
+    ];
+
+    const images = [
+      "attached_assets/Calm image1.jpg",
+      "attached_assets/Calm image2.jpg",
+      "attached_assets/Calm image3.jpg",
+      "attached_assets/Calm image4.jpg",
+      "attached_assets/Calm image5.jpg"
+    ];
+
+    function getRandomItems(arr, count) {
+      const shuffled = arr.sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+    }
+
+    function refreshTips() {
+      const [tipOne, tipTwo] = getRandomItems(tips, 2);
+      document.getElementById('tip1').textContent = `🌼 ${tipOne}`;
+      document.getElementById('tip2').textContent = `🌼 ${tipTwo}`;
+
+      const randomImage = images[Math.floor(Math.random() * images.length)];
+      document.body.style.backgroundImage = `url('${randomImage}')`;
+    }
+
+    // Initialize on load
+    window.onload = refreshTips;
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MindGarden – Daily Reflections</title>
+        <style>
+          body 
+          {
+            font-family: 'Nunito', sans-serif;
+            background-color: #F3F3FF;
+            padding: 30px;
+            text-align: center;
+          }
+          h1 {
+            color: #4c6e91;
+          }
+          textarea {
+            width: 90%;
+            max-width: 600px;
+            height: 150px;
+            margin-top: 20px;
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+          }
+          button {
+            margin: 15px;
+            padding: 10px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #bcd4e6;
+            cursor: pointer;
+          }
+          button:hover {
+            background-color: #88bdbc;
+          }
+          .entry {
+            background-color: #f0f8ff;
+            margin: 15px auto;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 600px;
+            text-align: left;
+          }
+          .entry p {
+            margin: 5px 0;
+          }
+        </style>
+      </head>
+      <body>
+
+        <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 20px;">
+          <button onclick="window.location.href='index.html'" 
+                  style="padding: 10px 20px; font-size: 16px; border-radius: 8px; border: none; background-color: #bcd4e6; cursor: pointer;">
+            🏠 Back to Dashboard
+          </button>
+        </div>
+
+
+        <h1>📔 MindGarden – Daily Reflections</h1>
+        <p>Take a few minutes to reflect on your day.</p>
+
+        <textarea id="reflectionText" placeholder="Write your thoughts here..."></textarea><br/>
+        <button onclick="saveReflection()">Save Reflection</button>
+        <button onclick="clearReflections()">Clear All</button>
+
+        <h2>📝 Past Reflections</h2>
+        <div id="entries"></div>
+
+        <script>
+          function saveReflection() {
+            const text = document.getElementById("reflectionText").value.trim();
+            if (!text) return;
+            const date = new Date().toLocaleDateString();
+            const entry = { date, text };
+            const reflections = JSON.parse(localStorage.getItem("reflections") || "[]");
+            reflections.unshift(entry);
+            localStorage.setItem("reflections", JSON.stringify(reflections));
+            document.getElementById("reflectionText").value = "";
+            displayReflections();
+          }
+
+          function displayReflections() {
+            const entriesDiv = document.getElementById("entries");
+            const reflections = JSON.parse(localStorage.getItem("reflections") || "[]");
+            entriesDiv.innerHTML = reflections.map(ref => `
+              <div class="entry">
+                <p><strong>${ref.date}</strong></p>
+                <p>${ref.text}</p>
+              </div>
+            `).join("");
+          }
+
+          function clearReflections() {
+            if (confirm("Are you sure you want to delete all reflections?")) {
+              localStorage.removeItem("reflections");
+              displayReflections();
+            }
+          }
+
+          window.onload = displayReflections;
+        </script>
+
+      </body>
+      </html>
